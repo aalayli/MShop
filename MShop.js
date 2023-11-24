@@ -1,3 +1,4 @@
+
 let cartIcon = document.querySelector("#cart-icon");
 let cart = document.querySelector(".cart");
 let closeCart = document.querySelector("#close-cart"); 
@@ -46,49 +47,57 @@ function ready() {
 // Buy Button
 function buyButtonClicked(){
     let dd = " ";
+    var li = document.getElementById('cart-icon');
+    li.style.color='black';
     var cartContent = document.getElementsByClassName('cart-content')[0];
     var cartBoxes = document.getElementsByClassName('cart-box');
     var total = 0;
-    for (var i = 0; i < cartBoxes.length; i++) {
-        dd = dd + " *** "
-        var cartBox = cartBoxes[i];
+    if (cartBoxes.length <=0) {
+        alert("No item In Cart");
+    } else {
 
-        var product = cartBox.getElementsByClassName("cart-product-title")[0].innerText;     
+    
+        for (var i = 0; i < cartBoxes.length; i++) {
+            dd = dd + " *** "
+            var cartBox = cartBoxes[i];
 
-        var priceElement = cartBox.getElementsByClassName("cart-price")[0];
-        var quantityElement = cartBox.getElementsByClassName("cart-quantity")[0];
+            var product = cartBox.getElementsByClassName("cart-product-title")[0].innerText;     
 
+            var priceElement = cartBox.getElementsByClassName("cart-price")[0];
+            var quantityElement = cartBox.getElementsByClassName("cart-quantity")[0];
+
+            
+            var price = parseFloat(priceElement.innerText.replace("$", ""));
+            var quantity = quantityElement.value;
+            total = total + (price * quantity);
+            dd = dd + product + " / Price : " + price + " /  Quantity : " + quantity;
+            
+        }
+        dd = dd + "--->  Total : " + total +"$";
+    
+        console.log(dd);
         
-        var price = parseFloat(priceElement.innerText.replace("$", ""));
-        var quantity = quantityElement.value;
-        total = total + (price * quantity);
-        dd = dd + product + " / Price : " + price + " /  Quantity : " + quantity;
         
+
+
+
+        let number = "+96181413340";
+        var url ="https://wa.me/" + number + "?text=" + dd + "%0a";
+        window.open(url, '_blank').focus();
+        
+
+
+
+
+        //alert('Your Order is placed');
+        var cartContent = document.getElementsByClassName("cart-content")[0];
+    
+        while (cartContent.hasChildNodes()){
+            
+            cartContent.removeChild(cartContent.firstChild);
+        }
+        updatetotal();
     }
-    dd = dd + "--->  Total : " + total +"$";
-   
-    console.log(dd);
-    
-    
-
-
-
-    let number = "+96171413340";
-    var url ="https://wa.me/" + number + "?text=" + dd + "%0a";
-    window.open(url, '_blank').focus();
-    
-
-
-
-
-    //alert('Your Order is placed');
-    var cartContent = document.getElementsByClassName("cart-content")[0];
- 
-    while (cartContent.hasChildNodes()){
-        
-        cartContent.removeChild(cartContent.firstChild);
-    }
-    updatetotal();
 }
 // Reomve Items From Cart
 function removeCartItem(event) {
@@ -117,6 +126,13 @@ function addCartClicked(event) {
 }
 
 function addProductToCart(title, price, productImg) {
+
+    var cartBoxes = document.getElementsByClassName('cart-box');
+    var li = document.getElementById('cart-icon');
+    li.style.color='red';
+    li.textContent=cartBoxes.length+1;
+
+
     var cartShopBox = document.createElement("div");
     cartShopBox.classList.add("cart-box");
     var cartItems = document.getElementsByClassName("cart-content")[0];
@@ -149,6 +165,7 @@ cartShopBox
 
 
 function updatetotal(){
+    var li = document.getElementById('cart-icon');
     var cartContent = document.getElementsByClassName('cart-content')[0];
     var cartBoxes = document.getElementsByClassName('cart-box');
     var total = 0;
@@ -159,10 +176,16 @@ function updatetotal(){
         var price = parseFloat(priceElement.innerText.replace("$", ""));
         var quantity = quantityElement.value;
         total = total + (price * quantity);
+        li.textContent=cartBoxes.length;
     }
 // تحديد بعد الفاصلة 
     total = Math.round(total * 100) / 100;
     document.getElementsByClassName("total-price")[0].innerText = "$" + total;
 
+    if (cartBoxes.length <= 0) {
+        
+        li.style.color='white';
+        li.textContent=cartBoxes.length;
+    }
     
 }
